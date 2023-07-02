@@ -1,14 +1,24 @@
 import { useState } from "react";
 import server from "./server";
+import {recover, hashTransaction, getAddress} from "./Crypto";
+import { hexToBytes, toHex, utf8ToBytes } from "ethereum-cryptography/utils.js";
 
-function Transfer({ address, setBalance }) {
-  const [sendAmount, setSendAmount] = useState("");
-  const [recipient, setRecipient] = useState("");
 
-  const setValue = (setter) => (evt) => setter(evt.target.value);
+
+
+BigInt.prototype.toJSON = function () {
+  return this.toString();
+};
+
+function Transfer({ address, setBalance, sendAmount, recipient, signature}) {
 
   async function transfer(evt) {
     evt.preventDefault();
+
+    const recoverKey = recover(signature, hashTransaction(address, sendAmount, recipient)).toHex(false);
+    console.log(`recoverKey: ${toHex(recoverKey)}`);
+    recoveraddress = getAddress(recoverKey);
+    console.log(`recoveraddress: ${recoveraddress}`);
 
     try {
       const {
@@ -17,6 +27,7 @@ function Transfer({ address, setBalance }) {
         sender: address,
         amount: parseInt(sendAmount),
         recipient,
+        signature
       });
       setBalance(balance);
     } catch (ex) {
@@ -26,27 +37,39 @@ function Transfer({ address, setBalance }) {
 
   return (
     <form className="container transfer" onSubmit={transfer}>
-      <h1>Send Transaction</h1>
+      <h1>Broardcast Transaction</h1>
+
+      <label>
+        Sender Address
+        <input value={address} readOnly></input>
+      </label>
 
       <label>
         Send Amount
         <input
-          placeholder="1, 2, 3..."
           value={sendAmount}
-          onChange={setValue(setSendAmount)}
+          readOnly
         ></input>
       </label>
 
       <label>
         Recipient
         <input
-          placeholder="Type an address, for example: 0x2"
           value={recipient}
-          onChange={setValue(setRecipient)}
+          readOnly
         ></input>
       </label>
 
-      <input type="submit" className="button" value="Transfer" />
+      <label>
+        Signature
+        <textarea
+          value={JSON.stringify(signature)}
+          readOnly
+          rows="5"
+        ></textarea>
+      </label>
+
+      <input type="submit" className="button" value="Broadcast Transaction" />
     </form>
   );
 }
