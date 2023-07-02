@@ -3,8 +3,8 @@ const {keccak256} = require("ethereum-cryptography/keccak");
 const { hexToBytes, toHex, utf8ToBytes } = require("ethereum-cryptography/utils.js");
 
 
-function recoverKey(hashTransaction, signature) {
-  return signature.recoverPublicKey(hashTransaction).toRawBytes();
+function recover(signature, msg) {
+  return toHex(signature.recoverPublicKey(msg).toRawBytes());
 }
 
 function getAddress(publicKey) {
@@ -25,8 +25,18 @@ function publicKeysAreEqual(a, b) {
   return a.every((val, i) => val === b[i]);
 }
 
+function getSignature(signature) {
+  return new secp256k1.Signature(BigInt(signature.r), BigInt(signature.s), signature.recovery);
+}
+
+function verify(signature, msg, publicKey) {
+  return secp256k1.verify(signature, msg, publicKey);
+}
+
 module.exports = {
-  recoverKey,
   hashTransaction,
-  publicKeysAreEqual
+  publicKeysAreEqual,
+  recover,
+  getSignature,
+  verify
 }

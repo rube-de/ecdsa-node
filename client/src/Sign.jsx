@@ -1,6 +1,7 @@
 import server from "./server";
-import {getAddress, getPublicKey, signMsg, hashTransaction} from "./Crypto";
+import {verify, getPublicKey, signMsg, hashTransaction, recover} from "./Crypto";
 import { useState } from "react";
+import {toHex} from "ethereum-cryptography/utils.js";
 
 BigInt.prototype.toJSON = function () {
   return this.toString();
@@ -16,10 +17,9 @@ function Sign({ privateKey, signature, setSignature, sendAmount, setSendAmount, 
     const sender = getPublicKey(privateKey);
     const message = hashTransaction(sender, sendAmount, recipient);
     signature = signMsg(privateKey, message);
-    const pub = signature.recoverPublicKey(message);
-    console.log(pub);
-    console.log(`pub: ${pub}`);
-    console.log(JSON.stringify(signature).toString());
+    const pub = recover(signature, message);
+    const isValid = verify(signature, message, sender);
+    console.log(`valid signature: ${isValid}`);
     setSignature(signature);
   }
 

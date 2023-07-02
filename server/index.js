@@ -1,7 +1,7 @@
 const express = require("express");
 const app = express();
 const cors = require("cors");
-const { recoverKey, hashTransaction, publickKeysAreEqual } = require("./scripts/crypto.js");
+const { getSignature, hashTransaction, recover, verify } = require("./scripts/crypto.js");
 const port = 3042;
 
 app.use(cors());
@@ -21,11 +21,13 @@ app.get("/balance/:address", (req, res) => {
 
 app.post("/send", (req, res) => {
   const { sender, recipient, amount, signature } = req.body;
-  console.log({ sender, recipient, amount, signature });
-
+  //console.log({ sender, recipient, amount, signature });
+  const sig = getSignature(signature);
   const hashTx = hashTransaction(sender, amount, recipient);
-  const pubKey = recoverKey(hashTx, signature);
-  if (! publickKeysAreEqual(pubKey, sender)) {
+  const pubKey = recover(sig, hashTx);
+  const isValid = verify(sig, hashTx, sender);
+  console.log(`valid signature: ${isValid}`);
+  if (pubKey != sender) {
     res.status(400).send({ message: "Invalid signature!" });
   } else {
     setInitialBalance(sender);

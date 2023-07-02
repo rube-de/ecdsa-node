@@ -14,12 +14,6 @@ function Transfer({ address, setBalance, sendAmount, recipient, signature}) {
 
   async function transfer(evt) {
     evt.preventDefault();
-
-    const recoverKey = recover(signature, hashTransaction(address, sendAmount, recipient)).toHex(false);
-    console.log(`recoverKey: ${toHex(recoverKey)}`);
-    recoveraddress = getAddress(recoverKey);
-    console.log(`recoveraddress: ${recoveraddress}`);
-
     try {
       const {
         data: { balance },

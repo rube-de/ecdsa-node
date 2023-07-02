@@ -7,7 +7,7 @@ export function getAddress(publicKey) {
 }
 
 export function getPublicKey(privateKey) {
-  return secp256k1.getPublicKey(privateKey);
+  return toHex(secp256k1.getPublicKey(privateKey));
 }
 
 export function createRandomPrivateKey() {
@@ -25,11 +25,15 @@ export function hashTransaction(sender, amount, recipient){
 }
 
 export function signMsg(privateKey, hashedMsg) {
-  return secp256k1.sign(hashedMsg, privateKey);
+  return secp256k1.sign(hashedMsg, privateKey, { extraEntropy: true });
 }
 
 export function recover(signature, msg) {
-  return signature.recoverPublicKey(msg);
+  return toHex(signature.recoverPublicKey(msg).toRawBytes());
+}
+
+export function verify(signature, msg, publicKey) {
+  return secp256k1.verify(signature, msg, publicKey);
 }
 
 export function loadTestWallets() {

@@ -13,7 +13,7 @@ function Wallet({ address, setAddress, balance, setBalance, privateKey, setPriva
     setPrivateKey(privateKey);
     const publicKey = getPublicKey(privateKey);
     console.log(`publicKey: ${publicKey}`);
-    address = toHex(publicKey);
+    address = publicKey;
     setAddress(address);
     if (address) {
       const {
@@ -45,12 +45,6 @@ function Wallet({ address, setAddress, balance, setBalance, privateKey, setPriva
   return (
     <div className="container wallet">
       <h1>Your Wallet</h1>
-
-      <label>
-        PrivateKey
-        <input  value={privateKey} onChange={onChangePK}></input>
-      </label>
-
       <label>
         privateKey wallet
         <select onChange={handleSelect}>
