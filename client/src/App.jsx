@@ -37,8 +37,10 @@ function App() {
       <Transfer
        setBalance={setBalance}
        address={address}
-       recipient={recipient}
        sendAmount={sendAmount}
+       setSendAmount={setSendAmount}
+       recipient={recipient}
+       setRecipient={setRecipient}
        signature={signature}
       />
     </div>

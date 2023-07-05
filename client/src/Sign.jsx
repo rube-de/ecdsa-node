@@ -1,14 +1,10 @@
-import server from "./server";
 import {verify, getPublicKey, signMsg, hashTransaction, recover} from "./Crypto";
-import { useState } from "react";
-import {toHex} from "ethereum-cryptography/utils.js";
 
 BigInt.prototype.toJSON = function () {
   return this.toString();
 };
 
 function Sign({ privateKey, signature, setSignature, sendAmount, setSendAmount, recipient, setRecipient}) {
-
   const setValue = (setter) => (evt) => setter(evt.target.value);
 
   function signTransaction(evt) {

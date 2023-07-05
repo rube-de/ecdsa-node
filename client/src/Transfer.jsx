@@ -1,16 +1,12 @@
 import { useState } from "react";
 import server from "./server";
-import {recover, hashTransaction, getAddress} from "./Crypto";
-import { hexToBytes, toHex, utf8ToBytes } from "ethereum-cryptography/utils.js";
-
-
-
 
 BigInt.prototype.toJSON = function () {
   return this.toString();
 };
 
-function Transfer({ address, setBalance, sendAmount, recipient, signature}) {
+function Transfer({ address, setBalance, sendAmount, setSendAmount, recipient, setRecipient, signature}) {
+  const setValue = (setter) => (evt) => setter(evt.target.value);
 
   async function transfer(evt) {
     evt.preventDefault();
@@ -42,7 +38,7 @@ function Transfer({ address, setBalance, sendAmount, recipient, signature}) {
         Send Amount
         <input
           value={sendAmount}
-          readOnly
+          onChange={setValue(setSendAmount)}
         ></input>
       </label>
 
@@ -50,7 +46,7 @@ function Transfer({ address, setBalance, sendAmount, recipient, signature}) {
         Recipient
         <input
           value={recipient}
-          readOnly
+          onChange={setValue(setRecipient)}
         ></input>
       </label>
 
@@ -58,7 +54,7 @@ function Transfer({ address, setBalance, sendAmount, recipient, signature}) {
         Signature
         <textarea
           value={JSON.stringify(signature)}
-          readOnly
+          
           rows="5"
         ></textarea>
       </label>
