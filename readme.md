@@ -29,3 +29,13 @@ The server folder contains a node.js server using [express](https://expressjs.co
 The application should connect to the default server port (3042) automatically! 
 
 _Hint_ - Use [nodemon](https://www.npmjs.com/package/nodemon) instead of `node` to automatically restart the server on any changes.
+
+### How to use
+
+1. select a wallet from the dropdown
+2. enter amount and recipient (best one of the other wallets)
+3. sign the transaction
+4. broadcast the transaction
+5. see balances changes correctly
+
+If you didn't sign the transaction before 4. or you change the amount/recipient/signature the signature send to the server will be invalid and the transaction will not be executed.
